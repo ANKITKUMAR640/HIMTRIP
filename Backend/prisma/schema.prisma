@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  phone        String?
+  role         UserRole  @default(CUSTOMER)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  inquiries    Inquiry[]
+
+  @@index([role])
+  @@map("users")
+}
+
+model Inquiry {
+  id                 String        @id @default(cuid())
+  reference          String        @unique
+  name               String
+  email              String
+  phone              String?
+  message            String
+  tripName           String?
+  travelDate         DateTime?
+  travelers          Int?
+  budget             String?
+  status             InquiryStatus @default(NEW)
+  adminNotes         String?
+  userId             String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  duration           String?
+  itinerary          String?
+  notes              String?
+  destinationState   String?
+  quotedPrice        Int?
+  quoteMessage       String?
+  quoteStatus        QuoteStatus   @default(NONE)
+  quoteSentAt        DateTime?
+  quoteRespondedAt   DateTime?
+  bookingConfirmedAt DateTime?
+  user               User?         @relation(fields: [userId], references: [id])
+
+  @@index([status, createdAt])
+  @@index([email, createdAt])
+  @@index([userId, createdAt])
+  @@map("inquiries")
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  IN_DISCUSSION
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum QuoteStatus {
+  NONE
+  SENT
+  ACCEPTED
+  REJECTED
+}

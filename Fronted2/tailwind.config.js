@@ -1,0 +1,2 @@
+/** @type {import('tailwindcss').Config} */
+export default { content: ['./index.html','./src/**/*.{js,jsx}'], theme: { extend: { colors: { forest:'#123D32', midnight:'#0B2924', ivory:'#F8F5EF', sage:'#DCE7DE', amber:'#D8A65A' }, fontFamily: { display:['Playfair Display','serif'], sans:['DM Sans','sans-serif'] } } }, plugins: [] }
